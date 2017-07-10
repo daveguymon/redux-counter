@@ -1,12 +1,16 @@
 // change this to true to see test results on the black diamond section.
-export const BLACK_DIAMOND = false;
+export const BLACK_DIAMOND = true;
 
 const initialState = {
-    currentValue: 0
+    currentValue: 0,
+    futureValues: [],
+    previousValues: []
 }
 
 const INCREMENT = "INCREMENT";
 const DECREMENT = "DECREMENT";
+const UNDO = "UNDO";
+const REDO = "REDO";
 
 export function increment(amount) {
     return (
@@ -26,15 +30,41 @@ export function decrement(amount) {
     )
 }
 
+export function undo() {
+    return { type: UNDO };
+}
+
+export function redo() {
+    return { type: REDO };
+}
+
 
 export default function counter(state = initialState, action) {
     switch (action.type) {
         case INCREMENT:
-            return {currentValue: state.currentValue + action.amount};
-            break;
+            return ({
+                currentValue: state.currentValue + action.amount,
+                futureValues: [],
+                previousValues: [ state.currentValue, ...state.previousValues ]
+            });
         case DECREMENT:
-            return {currentValue: state.currentValue - action.amount}
-            break;
+            return ({
+                currentValue: state.currentValue - action.amount,
+                futureValues: [],
+                previousValues: [ state.currentValue, ...state.previousValues ]
+            });
+        case UNDO: 
+            return ({
+                currentValue: state.previousValues[0],
+                futureValues: [ state.currentValue, ...state.futureValues ],
+                previousValues: state.previousValues.slice( 1, state.previousValues.length )
+            });
+        case REDO:
+            return ({
+                currentValue: state.futureValues[0],
+                futureValues: state.futureValues.slice( 1, state.futureValues.length),
+                previousValues: [ state.currentValue, ...state.previousValues ]
+            });
         default:
             return state;
    }

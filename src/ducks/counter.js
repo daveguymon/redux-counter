@@ -5,6 +5,37 @@ const initialState = {
     currentValue: 0
 }
 
+const INCREMENT = "INCREMENT";
+const DECREMENT = "DECREMENT";
+
+export function increment(amount) {
+    return (
+        {
+            amount,
+            type: INCREMENT
+        }
+    )
+}
+
+export function decrement(amount) {
+    return (
+        {
+            amount,
+            type: DECREMENT
+        }
+    )
+}
+
+
 export default function counter(state = initialState, action) {
-    return state;
+    switch (action.type) {
+        case INCREMENT:
+            return {currentValue: state.currentValue + action.amount};
+            break;
+        case DECREMENT:
+            return {currentValue: state.currentValue - action.amount}
+            break;
+        default:
+            return state;
+   }
 }

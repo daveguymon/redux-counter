@@ -1,9 +1,13 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux';
 
 import "./App.css";
 
 export class App extends Component {
 	render() {
+        
+        console.log(this.props);
+        
 		return (
 			<div className="app">
 				<section className="counter">
@@ -60,4 +64,10 @@ export class App extends Component {
 	}
 }
 
-export default App;
+function mapStateToProps(state) {
+    return state;
+}
+const decorator = connect(mapStateToProps);
+const decoratedComponent = decorator(App);
+export default decoratedComponent;
+
